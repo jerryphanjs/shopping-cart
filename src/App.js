@@ -1,26 +1,36 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
+import Main from './components/Main';
+import Cart from './components/Cart';
+import Sidebar from './components/Sidebar';
+import Navbar from './components/Navbar';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
+import rootReducer from './reducers';
+
+const middleware = [ thunk ];
+const store = createStore(rootReducer, applyMiddleware(...middleware));
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Router>
+        <Provider store={store}>
+          <div className="App">
+          <Navbar />
+            <div className="row">
+              <div className="col s3">
+                <Sidebar />
+              </div>
+              <div className="col s9">
+                <Route exact path="/" component={Main} />
+                <Route path="/cart/" component={Cart} />
+              </div>
+            </div>
+          </div>
+        </Provider>
+      </Router>
     );
   }
 }
